@@ -31,8 +31,8 @@ function Fallback() {
   return (
     <div className="flex w-full">
       <h1 className="text-4xl font-bold">
-        <Skeleton className="w-[180px] h-[36px]" />
-        <Skeleton className="w-[150px] h-[36px]" />
+        <Skeleton className="w-[150px] h-[36px] my-4" />
+        <Skeleton className="w-[250px] h-[36px]" />
       </h1>
     </div>
   );
