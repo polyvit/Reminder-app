@@ -1,5 +1,3 @@
-<image src="">
-
 # Reminder App
 
 _Completed in Apr, 2024_
@@ -8,11 +6,14 @@ _Completed in Apr, 2024_
 
 Tools:
 
-- c
+- TypeScript
+- Next 14
+- Clerk
+- Shadcn/ui
 
 Libraries:
 
-- c
+- Next Themes
 
 Comments:
 
