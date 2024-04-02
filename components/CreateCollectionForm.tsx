@@ -31,6 +31,9 @@ import { cn } from "@/lib/utils";
 import { Separator } from "./ui/separator";
 import { Button } from "./ui/button";
 import { createCollectionAction } from "@/actions/collection";
+import { useToast } from "@/components/ui/use-toast";
+import { ReloadIcon } from "@radix-ui/react-icons";
+import { useRouter } from "next/navigation";
 
 interface ICreateCollectionProps {
   open: boolean;
@@ -46,14 +49,26 @@ const CreateCollectionForm: React.FC<ICreateCollectionProps> = ({
     resolver: zodResolver(createCollectionSchema),
   });
   const watchColor = form.watch("color");
+  const { toast } = useToast();
+  const router = useRouter();
 
   const onSubmit: SubmitHandler<SchemaType> = async (data: SchemaType) => {
     try {
       await createCollectionAction(data);
+      onOpenChangeHandler(false);
+      router.refresh();
+      toast({
+        title: "Success",
+        description: "Collection was created",
+      });
     } catch (e) {
-      alert(e);
+      toast({
+        title: "Error",
+        description: "Something went wrong",
+        variant: "destructive",
+      });
+      console.log(e);
     }
-    onOpenChangeHandler(false);
   };
 
   const onOpenChangeHandler = (open: boolean) => {
@@ -129,11 +144,15 @@ const CreateCollectionForm: React.FC<ICreateCollectionProps> = ({
         <div className="flex flex-col gap-3 mt-4">
           <Separator />
           <Button
+            disabled={form.formState.isSubmitting}
             variant="outline"
             className={watchColor && Colors[form.getValues("color") as Color]}
             onClick={form.handleSubmit(onSubmit)}
           >
             Create
+            {form.formState.isSubmitting && (
+              <ReloadIcon className="ml-2 h-4 w-4 animate-spin" />
+            )}
           </Button>
         </div>
       </SheetContent>

@@ -12,8 +12,8 @@ datasource db {
 
 model Collection {
   id    Int     @id @default(autoincrement())
-  userId String  @unique
-  name  String? @unique
+  userId String  
+  name  String? 
   color String
   createdAt DateTime @default(now())
 }

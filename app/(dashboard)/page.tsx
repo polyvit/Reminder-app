@@ -65,5 +65,10 @@ async function CollectionList() {
       </div>
     );
   }
-  return <h2>There is at least one collection</h2>;
+  return (
+    <div>
+      Collections: {collections.length}
+      <CreateCollection />
+    </div>
+  );
 }
