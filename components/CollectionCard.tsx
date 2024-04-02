@@ -23,15 +23,41 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "./ui/alert-dialog";
+import { deleteCollectionAction } from "@/actions/collection";
+import { useToast } from "./ui/use-toast";
+import { useRouter } from "next/navigation";
 
 export interface ICollectionCard {
   collection: Collection;
 }
 
+const tasks: string[] = ["Task 1", "Task 2"];
+
 const CollectionCard: React.FC<ICollectionCard> = ({ collection }) => {
   const [isOpen, setIsOpen] = useState<boolean>(true);
+  const { toast } = useToast();
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const tasks: string[] = ["Task 1", "Task 2"];
+  const removeCollection = async () => {
+    setIsLoading(true);
+    try {
+      await deleteCollectionAction(collection.id);
+      toast({
+        title: "Success",
+        description: "Collection was deleted",
+      });
+      router.refresh();
+    } catch (e) {
+      toast({
+        title: "Error",
+        description: "Something went wrong",
+        variant: "destructive",
+      });
+      console.log(e);
+    }
+    setIsLoading(false);
+  };
 
   return (
     <Collapsible open={isOpen} onOpenChange={(open) => setIsOpen(open)}>
@@ -64,31 +90,36 @@ const CollectionCard: React.FC<ICollectionCard> = ({ collection }) => {
         <Separator />
         <footer className="flex justify-between items-center h-[40px] px-4 p-[2px] text-xs text-neutral-500">
           <p>Created at {collection.createdAt.toLocaleDateString("ru-RU")}</p>
-          <div className="">
-            <Button size={"icon"} variant={"ghost"}>
-              <PlusIcon />
-            </Button>
-            <AlertDialog>
-              <AlertDialogTrigger asChild>
-                <Button size={"icon"} variant={"ghost"}>
-                  <TrashIcon />
-                </Button>
-              </AlertDialogTrigger>
-              <AlertDialogContent>
-                <AlertDialogTitle>
-                  Are you sure you want to delete?
-                </AlertDialogTitle>
-                <AlertDialogDescription>
-                  This action cannot be undone. This will permanently delete
-                  your collections and all tasks.
-                </AlertDialogDescription>
-                <AlertDialogFooter>
-                  <AlertDialogCancel>Cancel</AlertDialogCancel>
-                  <AlertDialogAction>Proceed</AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
-          </div>
+          {isLoading && <div>Loading...</div>}
+          {!isLoading && (
+            <div>
+              <Button size={"icon"} variant={"ghost"}>
+                <PlusIcon />
+              </Button>
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button size={"icon"} variant={"ghost"}>
+                    <TrashIcon />
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogTitle>
+                    Are you sure you want to delete?
+                  </AlertDialogTitle>
+                  <AlertDialogDescription>
+                    This action cannot be undone. This will permanently delete
+                    your collections and all tasks.
+                  </AlertDialogDescription>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction onClick={removeCollection}>
+                      Proceed
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            </div>
+          )}
         </footer>
       </CollapsibleContent>
     </Collapsible>

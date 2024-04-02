@@ -16,3 +16,16 @@ export async function createCollectionAction(form: SchemaType) {
         }
     })
 }
+
+export async function deleteCollectionAction(id: number) {
+    const user = await currentUser()
+    if (!user) {
+        throw new Error("No user exists")
+    }
+    return await prisma.collection.delete({
+        where: {
+            id: id,
+            userId: user.id
+        }
+    })
+}
