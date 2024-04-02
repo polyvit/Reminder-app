@@ -30,6 +30,7 @@ import { Color, Colors } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import { Separator } from "./ui/separator";
 import { Button } from "./ui/button";
+import { createCollectionAction } from "@/actions/collection";
 
 interface ICreateCollectionProps {
   open: boolean;
@@ -46,7 +47,14 @@ const CreateCollectionForm: React.FC<ICreateCollectionProps> = ({
   });
   const watchColor = form.watch("color");
 
-  const onSubmit: SubmitHandler<SchemaType> = (data) => console.log(data);
+  const onSubmit: SubmitHandler<SchemaType> = async (data: SchemaType) => {
+    try {
+      await createCollectionAction(data);
+    } catch (e) {
+      alert(e);
+    }
+    onOpenChangeHandler(false);
+  };
 
   const onOpenChangeHandler = (open: boolean) => {
     form.reset();
