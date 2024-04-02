@@ -1,4 +1,5 @@
-import CreateCollection from "@/components/CreateCollection";
+import CollectionCard from "@/components/CollectionCard";
+import CreateCollection from "@/components/CreateCollectionBtn";
 import FrownFace from "@/components/icons/FrownFace";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -66,9 +67,13 @@ async function CollectionList() {
     );
   }
   return (
-    <div>
-      Collections: {collections.length}
+    <>
       <CreateCollection />
-    </div>
+      <div className="flex flex-col gap-4 mt-6">
+        {collections.map((collection) => (
+          <CollectionCard collection={collection} key={collection.id} />
+        ))}
+      </div>
+    </>
   );
 }
