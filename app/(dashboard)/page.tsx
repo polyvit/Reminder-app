@@ -1,13 +1,21 @@
+import FrownFace from "@/components/icons/FrownFace";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Skeleton } from "@/components/ui/skeleton";
+import prisma from "@/lib/prisma";
 import { wait } from "@/lib/utils";
 import { auth, currentUser } from "@clerk/nextjs";
 import { Suspense } from "react";
 
 export default async function Home() {
   return (
-    <Suspense fallback={<Fallback />}>
-      <WelcomeMessage />
-    </Suspense>
+    <>
+      <Suspense fallback={<Fallback />}>
+        <WelcomeMessage />
+      </Suspense>
+      <Suspense fallback={<div>Loading collections...</div>}>
+        <CollectionList />
+      </Suspense>
+    </>
   );
 }
 
@@ -17,7 +25,7 @@ async function WelcomeMessage() {
   if (!user) return <div>Error</div>;
 
   return (
-    <div className="flex w-full">
+    <div className="flex w-full mb-12">
       <h1 className="text-4xl font-bold">
         Welcome,
         <br />
@@ -29,11 +37,29 @@ async function WelcomeMessage() {
 
 function Fallback() {
   return (
-    <div className="flex w-full">
+    <div className="flex w-full mb-12">
       <h1 className="text-4xl font-bold">
         <Skeleton className="w-[150px] h-[36px] my-4" />
         <Skeleton className="w-[250px] h-[36px]" />
       </h1>
     </div>
   );
+}
+
+async function CollectionList() {
+  const user = await currentUser();
+  const collections = await prisma.collection.findMany({
+    where: {
+      userId: user?.id,
+    },
+  });
+  if (!collections.length) {
+    return (
+      <Alert>
+        <FrownFace />
+        <AlertTitle>No collections in the db</AlertTitle>
+        <AlertDescription>Create your first collection</AlertDescription>
+      </Alert>
+    );
+  }
 }
