@@ -10,6 +10,9 @@ Tools:
 - Next 14
 - Clerk
 - Shadcn/ui
+- React hook form
+- Zod
+- Prisma
 
 Libraries:
 

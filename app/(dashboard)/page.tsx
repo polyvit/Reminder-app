@@ -1,9 +1,9 @@
+import CreateCollection from "@/components/CreateCollection";
 import FrownFace from "@/components/icons/FrownFace";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Skeleton } from "@/components/ui/skeleton";
 import prisma from "@/lib/prisma";
-import { wait } from "@/lib/utils";
-import { auth, currentUser } from "@clerk/nextjs";
+import { currentUser } from "@clerk/nextjs";
 import { Suspense } from "react";
 
 export default async function Home() {
@@ -55,11 +55,14 @@ async function CollectionList() {
   });
   if (!collections.length) {
     return (
-      <Alert>
-        <FrownFace />
-        <AlertTitle>No collections in the db</AlertTitle>
-        <AlertDescription>Create your first collection</AlertDescription>
-      </Alert>
+      <div className="flex flex-col gap-5 ">
+        <Alert>
+          <FrownFace />
+          <AlertTitle>No collections in the db</AlertTitle>
+          <AlertDescription>Create your first collection</AlertDescription>
+        </Alert>
+        <CreateCollection />
+      </div>
     );
   }
 }
