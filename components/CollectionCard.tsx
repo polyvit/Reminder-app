@@ -27,6 +27,7 @@ import { deleteCollectionAction } from "@/actions/collection";
 import { useToast } from "./ui/use-toast";
 import { useRouter } from "next/navigation";
 import CreateTaskModal from "./CreateTaskModal";
+import TaskCard from "./TaskCard";
 
 export interface ICollectionCard {
   collection: Collection & {
@@ -94,7 +95,7 @@ const CollectionCard: React.FC<ICollectionCard> = ({ collection }) => {
               <Progress className="rounded-none" value={45} />
               <div className="flex flex-col p-4 gap-3">
                 {tasks.map((task) => (
-                  <div key={task.id}>{task.content}</div>
+                  <TaskCard key={task.id} task={task} />
                 ))}
               </div>
             </>
