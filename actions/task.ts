@@ -22,15 +22,18 @@ export async function createTaskAction({content, expiresAt, collectionId}: Schem
     })
 }
 
-// export async function deleteTaskAction(id: number) {
-//     const user = await currentUser()
-//     if (!user) {
-//         throw new Error("No user exists")
-//     }
-//     return await prisma.collection.delete({
-//         where: {
-//             id: id,
-//             userId: user.id
-//         }
-//     })
-// }
+export async function setTaskDoneAction(id: number) {
+    const user = await currentUser()
+    if (!user) {
+        throw new Error("No user exists")
+    }
+    return await prisma.task.update({
+        where: {
+            id: id,
+            userId: user.id
+        },
+        data: {
+            done: true
+        }
+    })
+}
