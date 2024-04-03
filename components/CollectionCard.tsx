@@ -1,5 +1,5 @@
 "use client";
-import { Collection } from "@prisma/client";
+import { Collection, Task } from "@prisma/client";
 import React, { useState } from "react";
 import {
   Collapsible,
@@ -28,16 +28,17 @@ import { useToast } from "./ui/use-toast";
 import { useRouter } from "next/navigation";
 
 export interface ICollectionCard {
-  collection: Collection;
+  collection: Collection & {
+    tasks: Task[];
+  };
 }
-
-const tasks: string[] = ["Task 1", "Task 2"];
 
 const CollectionCard: React.FC<ICollectionCard> = ({ collection }) => {
   const [isOpen, setIsOpen] = useState<boolean>(true);
   const { toast } = useToast();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const tasks = collection.tasks;
 
   const removeCollection = async () => {
     setIsLoading(true);
@@ -82,7 +83,7 @@ const CollectionCard: React.FC<ICollectionCard> = ({ collection }) => {
             <Progress className="rounded-none" value={45} />
             <div className="flex flex-col p-4 gap-3">
               {tasks.map((task) => (
-                <div>{task}</div>
+                <div key={task.id}>{task.content}</div>
               ))}
             </div>
           </>

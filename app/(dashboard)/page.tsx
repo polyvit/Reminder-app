@@ -53,6 +53,10 @@ async function CollectionList() {
     where: {
       userId: user?.id,
     },
+    //@ts-ignore
+    include: {
+      tasks: true,
+    },
   });
   if (!collections.length) {
     return (
