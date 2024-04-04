@@ -1,6 +1,6 @@
 "use client";
 import { Collection, Task } from "@prisma/client";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import {
   Collapsible,
   CollapsibleContent,
@@ -63,6 +63,14 @@ const CollectionCard: React.FC<ICollectionCard> = ({ collection }) => {
     setIsLoading(false);
   };
 
+  const totalTasks = collection.tasks.length;
+  const tasksDone = useMemo(
+    () => collection.tasks?.filter((task) => task.done).length,
+    [collection.tasks]
+  );
+
+  const progress = totalTasks === 0 ? 0 : (tasksDone / totalTasks) * 100;
+
   return (
     <>
       <Collapsible open={isOpen} onOpenChange={(open) => setIsOpen(open)}>
@@ -92,7 +100,7 @@ const CollectionCard: React.FC<ICollectionCard> = ({ collection }) => {
           )}
           {tasks.length && (
             <>
-              <Progress className="rounded-none" value={45} />
+              <Progress className="rounded-none" value={progress} />
               <div className="flex flex-col p-4 gap-3">
                 {tasks.map((task) => (
                   <TaskCard key={task.id} task={task} />
